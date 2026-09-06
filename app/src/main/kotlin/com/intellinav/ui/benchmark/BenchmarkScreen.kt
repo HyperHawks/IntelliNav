@@ -19,9 +19,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.CompareArrows
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -35,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.intellinav.core.benchmark.BenchmarkEvaluation
+import com.intellinav.core.benchmark.IoVnbdDatasetBenchmark
 import com.intellinav.ui.theme.AlertAmber
 import com.intellinav.ui.theme.DarkNavyBackground
 import com.intellinav.ui.theme.DarkNavyCard
@@ -43,6 +47,7 @@ import com.intellinav.ui.theme.HazardRed
 import com.intellinav.ui.theme.NeonGreen
 import com.intellinav.ui.theme.TextPrimaryWhite
 import com.intellinav.ui.theme.TextSecondaryMuted
+import java.util.Locale
 
 @Composable
 fun BenchmarkScreen(
@@ -78,20 +83,194 @@ fun BenchmarkScreen(
 
     Spacer(modifier = Modifier.height(height = 14.dp))
 
-    // 2. Demographic Reach & Impact Card
+    // 2. IO-VNBD Dataset Evaluation Table (Slide 4 & 6)
+    IoVnbdEvaluationTableCard()
+
+    Spacer(modifier = Modifier.height(height = 14.dp))
+
+    // 3. Demographic Reach & Economic Impact Card (Slide 5)
     DemographicImpactCard()
 
     Spacer(modifier = Modifier.height(height = 14.dp))
 
-    // 3. Technical Feasibility & System Specifications
+    // 4. SWOT Analysis Card (Slide 4)
+    SwotAnalysisCard()
+
+    Spacer(modifier = Modifier.height(height = 14.dp))
+
+    // 5. Technical Feasibility & System Specifications
     TechnicalFeasibilityCard()
 
     Spacer(modifier = Modifier.height(height = 14.dp))
 
-    // 4. Academic Research References Card
+    // 6. Academic Research References Card (Slide 6)
     ResearchReferencesCard()
 
     Spacer(modifier = Modifier.height(height = 24.dp))
+  }
+}
+
+@Composable
+private fun IoVnbdEvaluationTableCard() {
+  Card(
+    modifier = Modifier.fillMaxWidth(),
+    colors = CardDefaults.cardColors(containerColor = DarkNavyCard),
+    shape = RoundedCornerShape(size = 14.dp),
+  ) {
+    Column(modifier = Modifier.padding(all = 14.dp)) {
+      Row(verticalAlignment = CenterVertically) {
+        Icon(
+          imageVector = Icons.Default.TableChart,
+          contentDescription = "IO-VNBD Table",
+          tint = NeonGreen,
+          modifier = Modifier.size(size = 20.dp),
+        )
+        Spacer(modifier = Modifier.width(width = 8.dp))
+        Text(
+          text = "IO-VNBD Benchmark Dataset Validation",
+          color = TextPrimaryWhite,
+          fontSize = 14.sp,
+          fontWeight = Bold,
+        )
+      }
+      Text(
+        text = "Ref: Onyekpe et al. (Data in Brief 2021) & Brossard et al. (IEEE T-IV 2020)",
+        color = TextSecondaryMuted,
+        fontSize = 10.sp,
+      )
+
+      Spacer(modifier = Modifier.height(height = 10.dp))
+
+      BenchmarkRowItem(evaluation = IoVnbdDatasetBenchmark.AtalTunnelEvaluation)
+      Spacer(modifier = Modifier.height(height = 8.dp))
+      BenchmarkRowItem(evaluation = IoVnbdDatasetBenchmark.MumbaiUnderpassEvaluation)
+    }
+  }
+}
+
+@Composable
+private fun BenchmarkRowItem(evaluation: BenchmarkEvaluation) {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .background(color = DarkNavyBackground, shape = RoundedCornerShape(size = 8.dp))
+      .padding(all = 10.dp),
+  ) {
+    Text(text = evaluation.datasetName, color = FusedCyan, fontSize = 12.sp, fontWeight = SemiBold)
+    Spacer(modifier = Modifier.height(height = 4.dp))
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+      Column {
+        Text(text = "Track Length", color = TextSecondaryMuted, fontSize = 10.sp)
+        Text(text = "${evaluation.testTrackLengthMeters.toInt()} m", color = TextPrimaryWhite, fontSize = 12.sp, fontWeight = Bold)
+      }
+      Column {
+        Text(text = "Standard GPS", color = HazardRed, fontSize = 10.sp)
+        Text(text = "FROZEN", color = HazardRed, fontSize = 12.sp, fontWeight = Bold)
+      }
+      Column {
+        Text(text = "IntelliNav RMSE", color = NeonGreen, fontSize = 10.sp)
+        Text(text = "${String.format(locale = Locale.US, format = "%.1f", evaluation.intelliNavRmseMeters)} m", color = NeonGreen, fontSize = 12.sp, fontWeight = Bold)
+      }
+      Column {
+        Text(text = "Drift %", color = FusedCyan, fontSize = 10.sp)
+        Text(text = "${String.format(locale = Locale.US, format = "%.2f", evaluation.driftPercentageOfDistance)}%", color = FusedCyan, fontSize = 12.sp, fontWeight = Bold)
+      }
+      Column {
+        Text(text = "Inference", color = TextSecondaryMuted, fontSize = 10.sp)
+        Text(text = "${evaluation.inferenceLatencyMs} ms", color = TextPrimaryWhite, fontSize = 12.sp, fontWeight = Bold)
+      }
+    }
+  }
+}
+
+@Composable
+private fun SwotAnalysisCard() {
+  Card(
+    modifier = Modifier.fillMaxWidth(),
+    colors = CardDefaults.cardColors(containerColor = DarkNavyCard),
+    shape = RoundedCornerShape(size = 14.dp),
+  ) {
+    Column(modifier = Modifier.padding(all = 14.dp)) {
+      Text(
+        text = "SWOT ANALYSIS (TEKATHON 5.0)",
+        color = TextPrimaryWhite,
+        fontSize = 13.sp,
+        fontWeight = Bold,
+      )
+
+      Spacer(modifier = Modifier.height(height = 10.dp))
+
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+      ) {
+        // Strengths
+        Column(
+          modifier = Modifier
+            .weight(weight = 1f)
+            .background(color = NeonGreen.copy(alpha = 0.08f), shape = RoundedCornerShape(size = 8.dp))
+            .padding(all = 8.dp),
+        ) {
+          Text(text = "STRENGTHS", color = NeonGreen, fontSize = 11.sp, fontWeight = Bold)
+          Text(text = "• Zero extra hardware", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• 100% offline & on-device", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• Dual app & edge deployment", color = TextPrimaryWhite, fontSize = 10.sp)
+        }
+
+        Spacer(modifier = Modifier.width(width = 8.dp))
+
+        // Weaknesses
+        Column(
+          modifier = Modifier
+            .weight(weight = 1f)
+            .background(color = AlertAmber.copy(alpha = 0.08f), shape = RoundedCornerShape(size = 8.dp))
+            .padding(all = 8.dp),
+        ) {
+          Text(text = "WEAKNESSES", color = AlertAmber, fontSize = 11.sp, fontWeight = Bold)
+          Text(text = "• Long tunnel (>1km) drift", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• Per-device phone bias", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• Depends on training data", color = TextPrimaryWhite, fontSize = 10.sp)
+        }
+      }
+
+      Spacer(modifier = Modifier.height(height = 8.dp))
+
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+      ) {
+        // Opportunities
+        Column(
+          modifier = Modifier
+            .weight(weight = 1f)
+            .background(color = FusedCyan.copy(alpha = 0.08f), shape = RoundedCornerShape(size = 8.dp))
+            .padding(all = 8.dp),
+        ) {
+          Text(text = "OPPORTUNITIES", color = FusedCyan, fontSize = 11.sp, fontWeight = Bold)
+          Text(text = "• Fleet & delivery partnerships", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• OEM factory integration", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• NDRF disaster response", color = TextPrimaryWhite, fontSize = 10.sp)
+        }
+
+        Spacer(modifier = Modifier.width(width = 8.dp))
+
+        // Threats
+        Column(
+          modifier = Modifier
+            .weight(weight = 1f)
+            .background(color = HazardRed.copy(alpha = 0.08f), shape = RoundedCornerShape(size = 8.dp))
+            .padding(all = 8.dp),
+        ) {
+          Text(text = "THREATS", color = HazardRed, fontSize = 11.sp, fontWeight = Bold)
+          Text(text = "• Sensor API permission changes", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• OEM-built INS competition", color = TextPrimaryWhite, fontSize = 10.sp)
+          Text(text = "• OSM map quality differences", color = TextPrimaryWhite, fontSize = 10.sp)
+        }
+      }
+    }
   }
 }
 
