@@ -63,3 +63,6 @@ In dense urban canyons, tunnels, underpasses, and flyovers across India, standar
 ## 👥 Hackathon Team
 - **Smart India Hackathon 2026**
 - **Handle**: `@TEKATHON-5.0-IntelliNav`
+
+## 👨‍💻 Contributors
+- **Aryan Saini** ([@thecannycodes](https://github.com/thecannycodes)) - Lead Developer / AI Integration
