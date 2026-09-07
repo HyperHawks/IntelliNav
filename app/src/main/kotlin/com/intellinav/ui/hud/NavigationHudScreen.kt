@@ -166,3 +166,4 @@ private fun TopHudStatusBar(
     }
   }
 }
+// GNSS Blackout Simulation
