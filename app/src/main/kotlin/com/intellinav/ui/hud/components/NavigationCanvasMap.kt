@@ -231,3 +231,4 @@ fun NavigationCanvasMap(
     }
   }
 }
+// Added final map refinements
